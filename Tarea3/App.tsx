@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import CustomInput from './src/CustomInput';
+import CustomButton from './src/CustomButton';
 import { useState } from 'react';
 
 export default function App() {
@@ -23,21 +24,25 @@ export default function App() {
   //definicion de variable que almacena el resultado de la funcion 'validarSoloNumeros'
   const edadEsValida = validarSoloNumeros(edad);
 
+  // --- EJERCICIO 2 (CONTADOR) ---
+  //Creacion del estado contador
+  const [contador, setContador] = useState(0);
+
+  // Validacion logica para numero par
+  const esPar = contador % 2 === 0;
+
   return (
     <View style={styles.container}>
+      <StatusBar style="auto" />
       <View style={styles.card}>
         <Text>Bienvenido</Text>
-        {<StatusBar style="auto" />}
         <View>
-          {/* Input para nombre*/}
           <CustomInput 
             placeholder="Escriba su nombre"
             typeInput='text'
             value={nombre}
             onChange={setNombre} 
           />
-
-          {/* Input para edad */}
           <CustomInput 
             placeholder="Escriba su edad"
             typeInput='number'
@@ -45,36 +50,84 @@ export default function App() {
             onChange={setEdad}
           />
         </View>
-
-        {/* Mensaje final */}
         <View>
           {nombreEsValido && edadEsValida ? (
-            <Text>
-              Hola, {nombre}. Tienes {edad} años.
-            </Text>
+            <Text>Hola, {nombre}. Tienes {edad} años.</Text>
           ) : (
-            <Text>
-              Por favor, completa tus datos.
-            </Text>
+            <Text>Por favor, completa tus datos.</Text>
           )}
         </View>
       </View>
-    </View>
+
+      {/*EJERCICIO 2 (CONTADOR)*/}
+      <View style={[styles.card, { marginTop: 20 }]}>
+        <Text>Ejercicio 2: Contador</Text>
+        
+        {/*Texto que se actualiza por estilo y por tipo*/}
+        <Text style={{ 
+          fontSize: 18, 
+           
+          color: esPar ? 'blue' : 'purple'  //operador ternario para condicionar color del texto
+        }}>
+          {esPar ? "Número par" : "Número impar"}
+        </Text>
+
+        <Text style={styles.contadorValor}>{contador}</Text>
+
+        {/*Mensaje de error si es menor que 0 */}
+        {contador < 0 && (
+          <Text style={styles.mensajeError}>No se recomienda valores negativos</Text>
+        )}
+
+        <View style={styles.buttonContainer}>
+          {/*Botones Sumar y Restar */}
+          <CustomButton 
+            title="Sumar +1" 
+            onClick={() => setContador(contador + 1)} 
+            variant="primary" 
+          />
+          <View style={{ height: 10 }} />
+          <CustomButton 
+            title="Restar -1" 
+            onClick={() => setContador(contador - 1)} 
+            variant="secondary" 
+          />
+        </View>
+      </View>
+  </View>
   );
 }
 
 const styles = StyleSheet.create({
-container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  container: {
+    paddingVertical: 50,
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
   },
   card: {
-    width: '65%',
-    height: '30%',
+    width: '85%',
     padding: 20,
     backgroundColor: '#f3f4f6',
     borderRadius: 15,
+    alignItems: 'center',
+    
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+  },
+  contadorValor: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    marginVertical: 10
+  },
+  mensajeError: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center'
   }
 });
