@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native'; //adicion de libreria Image de react
 import CustomInput from './src/CustomInput';
 import CustomButton from './src/CustomButton';
 import { useState } from 'react';
 
 export default function App() {
-  //declaracion de estados independientes 
+   //declaracion de estados independientes 
   const [nombre, setNombre] = useState("");
   const [edad, setEdad] = useState("");
 
@@ -31,8 +31,12 @@ export default function App() {
   // Validacion logica para numero par
   const esPar = contador % 2 === 0;
 
-  return (
-    <View style={styles.container}>
+  // --- EJERCICIO 3 (TOGGLE) ---
+  // definicion de estado booleano inicial en false
+  const [mostrarDetalles, setMostrarDetalles] = useState(false);
+
+  return (    
+<View style={styles.container}> {/*EJERCICIO 1 FORMULARIO*/}
       <StatusBar style="auto" />
       <View style={styles.card}>
         <Text>Bienvenido</Text>
@@ -59,7 +63,7 @@ export default function App() {
         </View>
       </View>
 
-      {/*EJERCICIO 2 (CONTADOR)*/}
+{/*EJERCICIO 2 (CONTADOR)*/}
       <View style={[styles.card, { marginTop: 20 }]}>
         <Text>Ejercicio 2: Contador</Text>
         
@@ -94,7 +98,35 @@ export default function App() {
           />
         </View>
       </View>
-  </View>
+
+      {/*EJERCICIO 3 (TOGGLE)*/}
+      <View style={[styles.card, { marginTop: 20 }]}>
+        <Text>Ejercicio 3: Detalles</Text>
+        
+        {/* Botón con texto aplicando op. ternario */}
+        <CustomButton 
+          title={mostrarDetalles ? "Ocultar detalles" : "Mostrar detalles"} 
+          onClick={() => setMostrarDetalles(!mostrarDetalles)}
+          variant="primary"
+        />
+
+        <View style={{ marginTop: 15 }}>
+          {/* validacion de mostrarDetalles = true, mostrar bloque con descripción e imagen */}
+          {mostrarDetalles ? (
+            <View style={{ alignItems: 'center' }}>
+              <Text style={styles.descripcion}>Detalles del usuario estan activos</Text>
+              <Image 
+              source={{ uri: 'https://fastly.picsum.photos/id/237/3500/2095.jpg?hmac=y2n_cflHFKpQwLOL1SSCtVDqL8NmOnBzEW7LYKZ-z_o'}} 
+                style={styles.imagen}
+              />
+            </View>
+          ) : (
+            /* Si es falso, muestra mensaje: "Detalles ocultos" */
+            <Text style={styles.textoOculto}>Detalles ocultos</Text>
+          )}
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -110,7 +142,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
     borderRadius: 15,
     alignItems: 'center',
-    
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -129,5 +160,23 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     alignItems: 'center'
+  },
+  
+  //estilos para el toogle
+  descripcion: {
+    textAlign: 'center',
+    marginBottom: 10,
+    fontStyle: 'italic'
+  },
+  imagen: {
+    width: 150,
+    height: 150,
+    borderRadius: 10,
+    backgroundColor: '#ccc'
+  },
+  textoOculto: {
+    color: '#fa6060',
+    fontSize: 14
   }
+  
 });
